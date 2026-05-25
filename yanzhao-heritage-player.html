@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>燕赵非遗视窗 - 河北非遗视频库</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", serif;
+            background: linear-gradient(135deg, #E8B89D 0%, #F2C4A4 50%, #F5D5B8 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            background: linear-gradient(180deg, #FFFBF5 0%, #FFF5E8 100%);
+            border-radius: 20px;
+            box-shadow: 
+                0 30px 80px rgba(232, 184, 157, 0.4),
+                0 0 0 4px #D4A574,
+                0 0 0 8px #C99B7A;
+            padding: 50px;
+            width: 100%;
+            max-width: 950px;
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2.2em;
+            color: #8B5A3C;
+            margin-bottom: 10px;
+            letter-spacing: 6px;
+            font-weight: 600;
+            text-shadow: 2px 2px 0 rgba(212, 165, 116, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1em;
+            color: #A67C52;
+            letter-spacing: 3px;
+        }
+
+        .decorative-line {
+            width: 200px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #D4A574, #C99B7A, #D4A574, transparent);
+            margin: 18px auto;
+        }
+
+        .input-section {
+            margin-bottom: 35px;
+            background: rgba(201, 155, 122, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px solid #D4A574;
+        }
+
+        .input-label {
+            font-size: 1em;
+            color: #8B5A3C;
+            margin-bottom: 15px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-label::before {
+            content: '📜';
+        }
+
+        .input-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            min-width: 250px;
+            padding: 16px 20px;
+            font-size: 15px;
+            border: 2px solid #D4A574;
+            border-radius: 10px;
+            background: #FFF;
+            color: #5D4037;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #C99B7A;
+            box-shadow: 0 0 0 4px rgba(201, 155, 122, 0.2);
+        }
+
+        input[type="text"]::placeholder {
+            color: #BCAAA4;
+        }
+
+        button {
+            padding: 16px 30px;
+            font-size: 15px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-family: inherit;
+            letter-spacing: 2px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #C99B7A 0%, #B8896A 100%);
+            color: #FFF;
+            box-shadow: 0 4px 15px rgba(201, 155, 122, 0.4);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #B8896A 0%, #A67C52 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(201, 155, 122, 0.5);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #E8D4BE 0%, #DEC9A8 100%);
+            color: #8B5A3C;
+            box-shadow: 0 4px 15px rgba(212, 165, 116, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #DEC9A8 0%, #D4BEA0 100%);
+            transform: translateY(-2px);
+        }
+
+        .video-container {
+            position: relative;
+            background: #000;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 25px;
+            box-shadow: 
+                0 10px 40px rgba(0, 0, 0, 0.25),
+                inset 0 0 0 4px #D4A574;
+        }
+
+        video {
+            width: 100%;
+            max-height: 500px;
+            display: block;
+        }
+
+        .controls {
+            background: linear-gradient(180deg, #4A3728 0%, #3D2E20 100%);
+            padding: 18px 22px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            background: transparent;
+            color: #FFFBF5;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .control-btn:hover {
+            background: rgba(212, 165, 116, 0.3);
+            border-color: #D4A574;
+        }
+
+        .progress-container {
+            flex: 1;
+            min-width: 100px;
+            height: 6px;
+            background: #5A4A3A;
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+            border: 1px solid #6A5A4A;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #D4A574, #E8C49C);
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        .time-display {
+            color: #D4A574;
+            font-size: 13px;
+            white-space: nowrap;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 1px;
+        }
+
+        .volume-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        input[type="range"] {
+            width: 85px;
+            cursor: pointer;
+            accent-color: #C99B7A;
+        }
+
+        .message {
+            padding: 16px 22px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            display: none;
+            text-align: center;
+            font-size: 14px;
+            border: 2px solid;
+        }
+
+        .message.error {
+            background: #FFF0E8;
+            color: #C17B5A;
+            border-color: #E8B89D;
+        }
+
+        .message.success {
+            background: #F0F8F0;
+            color: #6B8E6B;
+            border-color: #A8D4A8;
+        }
+
+        .info-section {
+            margin-top: 35px;
+            padding: 28px;
+            background: linear-gradient(135deg, rgba(201, 155, 122, 0.1) 0%, rgba(212, 165, 116, 0.12) 100%);
+            border-radius: 15px;
+            border: 2px solid #D4A574;
+        }
+
+        .info-section h3 {
+            color: #8B5A3C;
+            margin-bottom: 18px;
+            font-size: 1.15em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-section h3::before {
+            content: '🏮';
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 12px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            color: #5D4037;
+            font-size: 0.92em;
+            transition: all 0.3s;
+            border: 1px solid rgba(212, 165, 116, 0.3);
+        }
+
+        .feature-item:hover {
+            background: rgba(255, 255, 255, 0.98);
+            transform: translateX(5px);
+        }
+
+        .feature-item::before {
+            content: '✦';
+            color: #C99B7A;
+            font-size: 1.1em;
+        }
+
+        .keyboard-hints {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed #D4A574;
+            font-size: 13px;
+            color: #8B5A3C;
+            text-align: center;
+        }
+
+        .keyboard-hints kbd {
+            background: linear-gradient(180deg, #FFF 0%, #FFF5E8 100%);
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-family: inherit;
+            margin: 0 4px;
+            border: 2px solid #D4A574;
+            box-shadow: 0 2px 0 #DEC9A8;
+            font-size: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 1.7em;
+                letter-spacing: 3px;
+            }
+
+            .input-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .progress-container {
+                width: 100%;
+                order: -1;
+            }
+
+            .volume-container {
+                justify-content: center;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>燕赵非遗视窗</h1>
+            <div class="decorative-line"></div>
+            <p class="subtitle">河北非物质文化遗产视频库</p>
+        </div>
+
+        <div id="message" class="message"></div>
+
+        <div class="input-section">
+            <div class="input-label">输入视频链接</div>
+            <div class="input-group">
+                <input type="text" id="videoUrl" placeholder="请输入视频URL地址（例如：https://example.com/video.mp4）">
+                <button class="btn-primary" onclick="loadVideo()">加载视频</button>
+                <button class="btn-secondary" onclick="clearVideo()">清除</button>
+            </div>
+        </div>
+
+        <div class="video-container" id="videoContainer" style="display: none;">
+            <video id="videoPlayer" controlsList="nodownload">
+                您的浏览器不支持视频播放
+            </video>
+
+            <div class="controls">
+                <button class="control-btn" id="playPauseBtn" onclick="togglePlay()">▶ 播放</button>
+                <button class="control-btn" onclick="stopVideo()">⏹ 停止</button>
+
+                <div class="progress-container" id="progressContainer" onclick="seekVideo(event)">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+
+                <span class="time-display" id="timeDisplay">00:00 / 00:00</span>
+
+                <div class="volume-container">
+                    <button class="control-btn" id="volumeIcon" onclick="toggleMute()">🔊</button>
+                    <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="1" onchange="setVolume(this.value)">
+                </div>
+
+                <button class="control-btn" onclick="toggleFullscreen()">⛶ 全屏</button>
+                <button class="control-btn" onclick="togglePiP()">📺 画中画</button>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h3>使用说明</h3>
+            <div class="features-grid">
+                <div class="feature-item">支持 MP4、WebM、OGG 等常见视频格式</div>
+                <div class="feature-item">支持网络视频URL（需可访问）</div>
+                <div class="feature-item">支持拖拽调整播放进度</div>
+                <div class="feature-item">支持音量调节和静音控制</div>
+                <div class="feature-item">支持全屏播放模式</div>
+                <div class="feature-item">支持画中画模式</div>
+            </div>
+            <div class="keyboard-hints">
+                键盘快捷键：<kbd>空格</kbd> 播放/暂停 | <kbd>←</kbd> <kbd>→</kbd> 快退/快进 | <kbd>↑</kbd> <kbd>↓</kbd> 音量
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const video = document.getElementById('videoPlayer');
+        const videoContainer = document.getElementById('videoContainer');
+        const progressBar = document.getElementById('progressBar');
+        const progressContainer = document.getElementById('progressContainer');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const volumeIcon = document.getElementById('volumeIcon');
+        const messageEl = document.getElementById('message');
+
+        function loadVideo() {
+            const url = document.getElementById('videoUrl').value.trim();
+
+            if (!url) {
+                showMessage('请输入有效的视频URL地址', 'error');
+                return;
+            }
+
+            video.src = url;
+            videoContainer.style.display = 'block';
+            showMessage('视频加载成功！', 'success');
+        }
+
+        function clearVideo() {
+            video.pause();
+            video.src = '';
+            videoContainer.style.display = 'none';
+            document.getElementById('videoUrl').value = '';
+            hideMessage();
+        }
+
+        function togglePlay() {
+            if (video.paused) {
+                video.play();
+                playPauseBtn.textContent = '⏸ 暂停';
+            } else {
+                video.pause();
+                playPauseBtn.textContent = '▶ 播放';
+            }
+        }
+
+        function stopVideo() {
+            video.pause();
+            video.currentTime = 0;
+            playPauseBtn.textContent = '▶ 播放';
+        }
+
+        video.addEventListener('timeupdate', () => {
+            const progress = (video.currentTime / video.duration) * 100;
+            progressBar.style.width = progress + '%';
+            updateTimeDisplay();
+        });
+
+        function seekVideo(event) {
+            const rect = progressContainer.getBoundingClientRect();
+            const pos = (event.clientX - rect.left) / rect.width;
+            video.currentTime = pos * video.duration;
+        }
+
+        function updateTimeDisplay() {
+            const current = formatTime(video.currentTime);
+            const duration = formatTime(video.duration || 0);
+            timeDisplay.textContent = `${current} / ${duration}`;
+        }
+
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return '00:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function setVolume(value) {
+            video.volume = value;
+            updateVolumeIcon(value);
+        }
+
+        function toggleMute() {
+            video.muted = !video.muted;
+            volumeSlider.value = video.muted ? 0 : video.volume;
+            updateVolumeIcon(video.muted ? 0 : video.volume);
+        }
+
+        function updateVolumeIcon(value) {
+            if (value == 0) {
+                volumeIcon.textContent = '🔇';
+            } else if (value < 0.5) {
+                volumeIcon.textContent = '🔉';
+            } else {
+                volumeIcon.textContent = '🔊';
+            }
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                videoContainer.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        async function togglePiP() {
+            try {
+                if (document.pictureInPictureElement) {
+                    await document.exitPictureInPicture();
+                } else if (document.pictureInPictureEnabled) {
+                    await video.requestPictureInPicture();
+                } else {
+                    showMessage('您的浏览器不支持画中画模式', 'error');
+                }
+            } catch (error) {
+                showMessage('画中画模式启动失败', 'error');
+            }
+        }
+
+        function showMessage(text, type) {
+            messageEl.textContent = text;
+            messageEl.className = 'message ' + type;
+            messageEl.style.display = 'block';
+
+            if (type === 'success') {
+                setTimeout(hideMessage, 3000);
+            }
+        }
+
+        function hideMessage() {
+            messageEl.style.display = 'none';
+        }
+
+        video.addEventListener('error', () => {
+            showMessage('视频加载失败，请检查URL是否可访问', 'error');
+        });
+
+        video.addEventListener('loadedmetadata', () => {
+            updateTimeDisplay();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT') return;
+
+            switch(e.code) {
+                case 'Space':
+                    e.preventDefault();
+                    togglePlay();
+                    break;
+                case 'ArrowLeft':
+                    video.currentTime -= 10;
+                    break;
+                case 'ArrowRight':
+                    video.currentTime += 10;
+                    break;
+                case 'ArrowUp':
+                    e.preventDefault();
+                    setVolume(Math.min(1, parseFloat(volumeSlider.value) + 0.1));
+                    volumeSlider.value = video.volume;
+                    break;
+                case 'ArrowDown':
+                    e.preventDefault();
+                    setVolume(Math.max(0, parseFloat(volumeSlider.value) - 0.1));
+                    volumeSlider.value = video.volume;
+                    break;
+                case 'KeyM':
+                    toggleMute();
+                    break;
+                case 'KeyF':
+                    toggleFullscreen();
+                    break;
+            }
+        });
+
+        document.getElementById('videoUrl').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                loadVideo();
+            }
+        });
+    </script>
+</body>
+</html>
