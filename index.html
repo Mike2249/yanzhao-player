@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>燕赵非遗视窗 - 视频播放</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", serif;
+            background: linear-gradient(135deg, #E8B89D 0%, #F2C4A4 50%, #F5D5B8 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+        .container {
+            background: linear-gradient(180deg, #FFFBF5 0%, #FFF5E8 100%);
+            border-radius: 20px;
+            box-shadow: 0 30px 80px rgba(232, 184, 157, 0.4), 0 0 0 4px #D4A574, 0 0 0 8px #C99B7A;
+            padding: 50px;
+            width: 100%;
+            max-width: 950px;
+        }
+        h1 {
+            font-size: 2.2em;
+            color: #8B5A3C;
+            margin-bottom: 10px;
+            letter-spacing: 6px;
+            text-align: center;
+        }
+        .decorative-line {
+            width: 200px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #D4A574, #C99B7A, #D4A574, transparent);
+            margin: 18px auto;
+        }
+        .subtitle {
+            text-align: center;
+            color: #A67C52;
+            margin-bottom: 30px;
+        }
+        .video-wrapper {
+            background: #000;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25), inset 0 0 0 4px #D4A574;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        video {
+            width: 100%;
+            max-height: 600px;
+            display: block;
+        }
+        .controls {
+            background: linear-gradient(180deg, #4A3728 0%, #3D2E20 100%);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            background: transparent;
+            color: #FFFBF5;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 14px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .btn:hover {
+            background: rgba(212, 165, 116, 0.3);
+            border-color: #D4A574;
+        }
+        .progress {
+            flex: 1;
+            min-width: 100px;
+            height: 6px;
+            background: #5A4A3A;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #D4A574, #E8C49C);
+            border-radius: 3px;
+            width: 0%;
+        }
+        .time {
+            color: #D4A574;
+            font-size: 13px;
+        }
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #FFF;
+            font-size: 18px;
+            background: rgba(0,0,0,0.7);
+            padding: 20px 40px;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 10;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #D4A574;
+            border-top-color: #FFF;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .download-link {
+            display: block;
+            text-align: center;
+            color: #8B5A3C;
+            text-decoration: none;
+            padding: 12px;
+            font-size: 14px;
+        }
+        .download-link:hover {
+            color: #D4A574;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>燕赵非遗视窗</h1>
+        <div class="decorative-line"></div>
+        <p class="subtitle">河北非物质文化遗产视频库</p>
+        
+        <div class="video-wrapper">
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <div id="loadingText">正在加载视频...</div>
+            </div>
+            <video id="video" controls playsinline>
+                您的浏览器不支持视频播放
+            </video>
+        </div>
+        
+        <div class="controls">
+            <button class="btn" id="playBtn">▶ 播放</button>
+            <div class="progress" id="progress">
+                <div class="progress-bar" id="bar"></div>
+            </div>
+            <span class="time" id="time">00:00 / 00:00</span>
+        </div>
+
+        <a id="downloadLink" class="download-link" href="https://hfcdn.lingverse.co/d86c1f43d82abd79ceb178bdc4618967/6A15C37F/hf/output/2/videos/e86d9062-4835-40b9-ae45-421d3089f0cb.mp4" download>
+            📥 直接下载视频
+        </a>
+    </div>
+
+    <script>
+        const videoUrl = 'https://hfcdn.lingverse.co/d86c1f43d82abd79ceb178bdc4618967/6A15C37F/hf/output/2/videos/e86d9062-4835-40b9-ae45-421d3089f0cb.mp4';
+        const video = document.getElementById('video');
+        const playBtn = document.getElementById('playBtn');
+        const bar = document.getElementById('bar');
+        const time = document.getElementById('time');
+        const loading = document.getElementById('loading');
+        const loadingText = document.getElementById('loadingText');
+
+        let videoBlobUrl = null;
+
+        // 使用 fetch 加载视频
+        async function loadVideo() {
+            try {
+                loadingText.textContent = '正在加载视频...';
+                
+                const response = await fetch(videoUrl, {
+                    method: 'GET',
+                    mode: 'cors',
+                    credentials: 'omit'
+                });
+                
+                if (!response.ok) {
+                    throw new Error('网络响应失败');
+                }
+                
+                const blob = await response.blob();
+                videoBlobUrl = URL.createObjectURL(blob);
+                
+                video.src = videoBlobUrl;
+                loading.style.display = 'none';
+                
+                video.onloadedmetadata = function() {
+                    updateTime();
+                };
+                
+                video.oncanplay = function() {
+                    loading.style.display = 'none';
+                };
+                
+            } catch (error) {
+                console.error('视频加载失败:', error);
+                // 如果fetch方式失败，尝试直接加载
+                loadingText.textContent = '正在尝试备用方式...';
+                video.src = videoUrl;
+                video.onloadedmetadata = function() {
+                    loading.style.display = 'none';
+                    updateTime();
+                };
+            }
+        }
+
+        // 如果fetch失败，使用video标签直接加载
+        video.onerror = function() {
+            loadingText.textContent = '正在重新加载...';
+            video.src = videoUrl;
+        };
+
+        // 视频事件
+        video.onwaiting = function() {
+            loading.style.display = 'block';
+        };
+
+        video.onplaying = function() {
+            loading.style.display = 'none';
+            playBtn.textContent = '⏸ 暂停';
+        };
+
+        video.onpause = function() {
+            playBtn.textContent = '▶ 播放';
+        };
+
+        video.ontimeupdate = function() {
+            if (video.duration) {
+                bar.style.width = (video.currentTime / video.duration * 100) + '%';
+                updateTime();
+            }
+        };
+
+        function togglePlay() {
+            if (video.paused) {
+                video.play().catch(e => {
+                    loadingText.textContent = '播放失败，请点击播放按钮';
+                    loading.style.display = 'block';
+                });
+            } else {
+                video.pause();
+            }
+        }
+
+        document.getElementById('progress').onclick = function(e) {
+            const rect = this.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / rect.width;
+            video.currentTime = pos * video.duration;
+        };
+
+        function updateTime() {
+            const f = s => (Math.floor(s/60)+'').padStart(2,'0') + ':' + (Math.floor(s%60)+'').padStart(2,'0'));
+            const duration = isNaN(video.duration) ? 0 : video.duration;
+            time.textContent = f(video.currentTime) + ' / ' + f(duration);
+        }
+
+        playBtn.onclick = togglePlay;
+        video.onclick = togglePlay;
+
+        document.onkeydown = e => {
+            if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
+            if (e.code === 'ArrowLeft') video.currentTime -= 10;
+            if (e.code === 'ArrowRight') video.currentTime += 10;
+        };
+
+        // 开始加载视频
+        loadVideo();
+    </script>
+</body>
+</html>
