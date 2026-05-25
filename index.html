@@ -110,6 +110,7 @@
             border-radius: 10px;
             text-align: center;
             z-index: 10;
+            display: none;
         }
         .spinner {
             width: 40px;
@@ -174,58 +175,17 @@
         const loading = document.getElementById('loading');
         const loadingText = document.getElementById('loadingText');
 
-        let videoBlobUrl = null;
-
-        // 使用 fetch 加载视频
-        async function loadVideo() {
-            try {
-                loadingText.textContent = '正在加载视频...';
-                
-                const response = await fetch(videoUrl, {
-                    method: 'GET',
-                    mode: 'cors',
-                    credentials: 'omit'
-                });
-                
-                if (!response.ok) {
-                    throw new Error('网络响应失败');
-                }
-                
-                const blob = await response.blob();
-                videoBlobUrl = URL.createObjectURL(blob);
-                
-                video.src = videoBlobUrl;
-                loading.style.display = 'none';
-                
-                video.onloadedmetadata = function() {
-                    updateTime();
-                };
-                
-                video.oncanplay = function() {
-                    loading.style.display = 'none';
-                };
-                
-            } catch (error) {
-                console.error('视频加载失败:', error);
-                // 如果fetch方式失败，尝试直接加载
-                loadingText.textContent = '正在尝试备用方式...';
-                video.src = videoUrl;
-                video.onloadedmetadata = function() {
-                    loading.style.display = 'none';
-                    updateTime();
-                };
-            }
-        }
-
-        // 如果fetch失败，使用video标签直接加载
-        video.onerror = function() {
-            loadingText.textContent = '正在重新加载...';
-            video.src = videoUrl;
-        };
+        // 直接设置视频源
+        video.src = videoUrl;
+        
+        // 显示加载状态
+        loading.style.display = 'block';
+        loadingText.textContent = '正在加载视频...';
 
         // 视频事件
         video.onwaiting = function() {
             loading.style.display = 'block';
+            loadingText.textContent = '正在缓冲...';
         };
 
         video.onplaying = function() {
@@ -235,6 +195,19 @@
 
         video.onpause = function() {
             playBtn.textContent = '▶ 播放';
+        };
+
+        video.onloadedmetadata = function() {
+            loading.style.display = 'none';
+            updateTime();
+        };
+
+        video.oncanplay = function() {
+            loading.style.display = 'none';
+        };
+
+        video.onerror = function() {
+            loadingText.textContent = '视频加载失败，请使用下载链接';
         };
 
         video.ontimeupdate = function() {
@@ -247,7 +220,7 @@
         function togglePlay() {
             if (video.paused) {
                 video.play().catch(e => {
-                    loadingText.textContent = '播放失败，请点击播放按钮';
+                    loadingText.textContent = '播放失败，请稍后重试';
                     loading.style.display = 'block';
                 });
             } else {
@@ -275,9 +248,6 @@
             if (e.code === 'ArrowLeft') video.currentTime -= 10;
             if (e.code === 'ArrowRight') video.currentTime += 10;
         };
-
-        // 开始加载视频
-        loadVideo();
     </script>
 </body>
 </html>
